@@ -1,5 +1,4 @@
 import openml
-
 import numpy as np
 from sklearn.model_selection import train_test_split
 import time
@@ -16,14 +15,14 @@ def unified_data_train (X_transformer, y, clf_list):
 
     y_big = y_sampling[100:]"""
     column_name= []
-    X_new = np.zeros((100, len(clf_list)))
+    X_new = np.zeros((300, len(clf_list)))
     for clf_i in range(len(clf_list)):
 
         X_sampling, y_sampling, X_rest, y_rest = data_train_sampling(X_transformer, y)
         """"fit_time=time.time()"""
-        clf_list[clf_i].fit(X_sampling[:100], y_sampling[:100])
+        clf_list[clf_i].fit(X_sampling[:300], y_sampling[:300])
         """print(f"{time.time()-fit_time}fit time für classifier#######{clf_list[clf_i]}")"""
-        X_new[:, clf_i] = clf_list[clf_i].predict_proba(X_sampling[100:])[:, 0]
+        X_new[:, clf_i] = clf_list[clf_i].predict_proba(X_sampling[300:])[:, 0]
         score, tn, fp, fn, tp = f1_score_berechnen(X_rest, y_rest, clf_list[clf_i])
         X_new = np.insert(X_new, X_new.shape[1], values=score, axis=1)
         column_name.append(f"f1_score__{clf_list[clf_i]}")
@@ -36,7 +35,7 @@ def unified_data_train (X_transformer, y, clf_list):
         X_new = np.insert(X_new, X_new.shape[1], values=tp, axis=1)
         column_name.append(f"TP __{clf_list[clf_i]}")
     features_names= clf_list+column_name
-    y_big = y_sampling[100:]
+    y_big = y_sampling[300:]
     return X_new, y_big, features_names
 
 

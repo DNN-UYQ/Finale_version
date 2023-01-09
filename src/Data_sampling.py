@@ -14,7 +14,7 @@ def data_train_sampling(X, y):
     X_rest=[]
     y_rest=[]
     remove_idx=[]
-    for i in range(100):
+    for i in range(300):
         X_sampling.append(X[random_id_positive[i]])
         y_sampling.append(y[random_id_positive[i]])
         remove_idx.append(random_id_positive[i])
@@ -41,7 +41,7 @@ def data_test_sampling(X, y):
     X_rest=[]
     y_rest=[]
     remove_idx=[]
-    for i in range(50):
+    for i in range(150):
         X_sampling.append(X[random_id_positive[i]])
         y_sampling.append(y[random_id_positive[i]])
         remove_idx.append(random_id_positive[i])

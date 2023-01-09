@@ -168,9 +168,8 @@ def main_unified_data_train():
     dataset_id=load_list("id_training_datasets.npy")
     del dataset_id[12]
     del dataset_id[29]
-    file_clf = np.load("fixed_200_classifier.npy", allow_pickle=True)
+    file_clf = np.load("fixed_100clf.npy", allow_pickle=True)
     clf_list = file_clf.tolist()
-    print(clf_list)
 
     groups=[]
     data_representation=[]
@@ -181,14 +180,14 @@ def main_unified_data_train():
             X_unified,y_unified, features_names =download_data_train(dataset_id[id], clf_list)
             features_names.append("target")
             data_representation.append(np.column_stack((X_unified, y_unified)))
-            for groups_ids in range (100):
+            for groups_ids in range (300):
                 groups.append(dataset_id[id])
         except:
             print(f"this dataset cann not be generatet{dataset_id[id]}")
     df=pd.DataFrame(np.vstack(data_representation), columns=features_names)
     print(f"time consoming to unified data representation{time.time()-start}")
-    return df.to_excel("evaluation_200clf_100inst.xlsx"), save_list(groups, "groups_200clf_100inst.npy")
-main_unified_data_train()
+    return df.to_excel("evaluation_100clf_300inst.xlsx"), save_list(groups, "groups_100clf_300inst.npy")
+#main_unified_data_train()
 
 
 def main_unified_data_test():
@@ -196,7 +195,7 @@ def main_unified_data_test():
     del dataset_id[3]
     del dataset_id[7]
     del dataset_id[6]
-    file_clf = np.load("fixed_200_classifier.npy", allow_pickle=True)
+    file_clf = np.load("fixed_100clf.npy", allow_pickle=True)
     clf_list = file_clf.tolist()
 
 
@@ -222,13 +221,13 @@ def main_unified_data_test():
             print(f"{dataset_id[id]}this dataset cann not be generated")
     features_names.append("target")
     #df1=pd.DataFrame(np.vstack(data_representation), columns=features_names)
-    save_list(X_test, "test_evalX_200clf_100inst.npy")
-    save_list(y_test, "test_evaly_200clf_100inst.npy")
+    save_list(X_test, "test_evalX_100clf_300inst.npy")
+    save_list(y_test, "test_evaly_100clf_300inst.npy")
     print(f"gesamt run time{time.time() - gesamt_time}")
     return print("test end...")
 
 
-#main_unified_data_test()
+main_unified_data_test()
 
 """x_y=[]
     for i in range(len(X_big_test)):

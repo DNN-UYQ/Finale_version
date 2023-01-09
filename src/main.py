@@ -1,7 +1,7 @@
 import os
 os.environ['OPENBLAS_NUM_THREADS'] = '1'
 from sklearn.model_selection import train_test_split
-
+from sklearn.model_selection import GroupKFold
 import autosklearn.classification
 import pandas as pd
 from autosklearn.metrics import f1
@@ -26,21 +26,23 @@ from sklearn.metrics import accuracy_score
 if __name__ == '__main__':
     start_time=time.time()
     #unified data to train our automl model
-    X_train, y_train= load_unified_data("evaluation_5clf_100inst.xlsx")             ######anderung
+    X_train, y_train= load_unified_data("evaluation_100clf_300inst.xlsx")             ######anderung
     #unified data to test our automl model
     #X_test, y_test = load_unified_data("data_test1.xlsx")
-    X_test= np.load("test_evalX_5clf_100inst.npy", allow_pickle=True).item()             ######anderung
-    y_test= np.load("test_evaly_5clf_100inst.npy", allow_pickle=True).item()             ######anderung
-    groups=np.load("groups_5clf_100inst.npy")
+    X_test= np.load("test_evalX_100clf_300inst.npy", allow_pickle=True).item()             ######anderung
+    y_test= np.load("test_evaly_100clf_300inst.npy", allow_pickle=True).item()             ######anderung
+    groups=np.load("groups_100clf_300inst.npy")
     print("hier Groups",groups)
     print("##########################",len(groups))                                     ########anderung
 
 
-    automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=6000,metric=f1, resampling_strategy=sklearn.model_selection.GroupKFold(n_splits=len(np.unique(groups))),
-                                                              resampling_strategy_arguments={'groups': groups})
+    automl = autosklearn.classification.AutoSklearnClassifier(time_left_for_this_task=6000, memory_limit=8000,metric=f1, resampling_strategy=sklearn.model_selection.GroupKFold(n_splits=5),
+                                                              resampling_strategy_arguments={"groups": groups})
     time_our_methode=time.time()
     fit_time=time.time()
+
     automl.fit(X_train, y_train)
+    print(automl.cv_results_())
     print("time fit",time.time()-fit_time)
     refit_time=time.time()
 
@@ -66,7 +68,7 @@ if __name__ == '__main__':
     F1_sc.append(avr_result / len(X_test))
     result = {"data_id": Data_id, "f1_score": F1_sc}
     df = pd.DataFrame(result)
-    df.to_excel("result_5clf_100inst.xlsx")
+    df.to_excel("result_100clf_300inst.xlsx")
 
 
 
